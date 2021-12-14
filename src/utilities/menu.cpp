@@ -12,8 +12,6 @@
 #include "../dependencies/imgui/imgui_impl_dx9.h"
 #include "../dependencies/imgui/imgui_impl_win32.h"
 
-HWND get_window();
-
 typedef HRESULT (__stdcall* EndScene)(LPDIRECT3DDEVICE9);
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
