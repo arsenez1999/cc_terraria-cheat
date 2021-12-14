@@ -1,19 +1,17 @@
 #include <Windows.h>
 #include "utilities/console.hpp"
+#include "utilities/menu.hpp"
 #include <thread>
 #include <chrono>
 
 DWORD __stdcall thread_callback(LPVOID hModule)
 {
+#ifndef NDEBUG
     console::initialize("CyberCommunity Terraria cheat - DEBUG");
     console::log() << "Welcome dev!" << std::endl;
-    while (!GetAsyncKeyState(VK_END))
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    }
-    console::release();
-    FreeLibraryAndExitThread(reinterpret_cast<HMODULE>(hModule), 0);
-    return FALSE;
+#endif
+    menu::initialize(hModule);
+    return TRUE;
 }
 
 BOOL __stdcall DllMain(HMODULE hModule, DWORD reason, LPVOID)
