@@ -4,11 +4,14 @@ project(terraria_cheat)
 include_directories(C:\\directx\\Include)
 link_directories(src/dependencies/minhook)
 
+file(GLOB imgui "src/dependencies/imgui/*.cpp")
+
 add_library(${PROJECT_NAME} SHARED
     src/dllmain.cpp
     src/utilities/console.cpp
     src/utilities/menu.cpp
     src/dependencies/kiero/kiero.cpp
+    ${imgui}
 )
 set(CMAKE_CXX_STANDART 17)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
