@@ -3,6 +3,7 @@ project(terraria_cheat)
 
 add_library(${PROJECT_NAME} SHARED
     src/dllmain.cpp
+    src/utilities/console.cpp
 )
 set(CMAKE_CXX_STANDART 17)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
