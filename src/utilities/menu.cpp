@@ -1,5 +1,6 @@
 #include "menu.hpp"
 #include "console.hpp"
+#include "../vars.hpp"
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -70,7 +71,7 @@ HRESULT __stdcall hook_EndScene(LPDIRECT3DDEVICE9 pDevice)
         ImGui_ImplDX9_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::ShowDemoWindow();
+        ImGui::Checkbox("God mode", &variables::godmode);
 
         ImGui::EndFrame();
         ImGui::Render();
