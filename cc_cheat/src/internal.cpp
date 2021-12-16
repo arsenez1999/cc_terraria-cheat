@@ -39,3 +39,23 @@ uintptr_t cc::cheat::find_signature(const char *sig, const char *mask, uintptr_t
     }
     return ret;
 }
+
+void cc::cheat::write_bytes(uintptr_t addr, std::vector<uint8_t> bytes)
+{
+    DWORD protection;
+    VirtualProtect(reinterpret_cast<void*>(addr), bytes.size(), PAGE_EXECUTE_READWRITE, &protection);
+    for (size_t i = 0; i < bytes.size(); i++)
+        cc::cheat::write(addr + i, bytes[i]);
+    VirtualProtect(reinterpret_cast<void*>(addr), bytes.size(), protection, nullptr);
+}
+
+std::vector<uint8_t> cc::cheat::read_bytes(uintptr_t addr, size_t size)
+{
+    DWORD protection;
+    std::vector<uint8_t> buff(size);
+    VirtualProtect(reinterpret_cast<void*>(addr), size, PAGE_EXECUTE_READWRITE, &protection);
+    for (size_t i = 0; i < size; i++)
+        buff[i] = cc::cheat::read<uint8_t>(addr + i);
+    VirtualProtect(reinterpret_cast<void*>(addr), size, protection, nullptr);
+    return buff;
+}

@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <vector>
 
 namespace cc
 {
@@ -18,5 +19,9 @@ namespace cc
         }
 
         std::uintptr_t find_signature(const char* sig, const char* mask, std::uintptr_t begin, std::uintptr_t size, uint8_t xor_key);
+
+        void write_bytes(std::uintptr_t addr, std::vector<uint8_t> bytes);
+
+        std::vector<uint8_t> read_bytes(std::uintptr_t addr, size_t size);
     }
 }
