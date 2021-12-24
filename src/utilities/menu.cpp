@@ -1,5 +1,6 @@
 #include "menu.hpp"
 #include "console.hpp"
+#include "hooks.hpp"
 #include "../vars.hpp"
 
 #ifndef WIN32_LEAN_AND_MEAN
@@ -46,6 +47,7 @@ HRESULT __stdcall hook_EndScene(LPDIRECT3DDEVICE9 pDevice)
     if (!init)
     {
         console::log() << "EndScene: hooked!" << std::endl;
+        directx_device = pDevice;
         init_imgui(pDevice);
         init = true;
     }
@@ -53,6 +55,7 @@ HRESULT __stdcall hook_EndScene(LPDIRECT3DDEVICE9 pDevice)
     {
         menu::release();
         console::release();
+        hooks::release();
         CreateThread(nullptr, 0, exit_callback, nullptr, 0, nullptr);
         return 0;
     }
@@ -72,10 +75,14 @@ HRESULT __stdcall hook_EndScene(LPDIRECT3DDEVICE9 pDevice)
         ImGui::NewFrame();
 
         ImGui::Checkbox("God mode", &variables::godmode);
+        ImGui::Checkbox("No mana cost", &variables::mana);
+        ImGui::Text("Default max pets count");
+        ImGui::SliderInt("##", reinterpret_cast<int32_t*>(&variables::pets), 1, 50);
 
         ImGui::EndFrame();
         ImGui::Render();
         ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+        ImGui_ImplDX9_InvalidateDeviceObjects();
     }
     return original_EndScene(pDevice);
 }
