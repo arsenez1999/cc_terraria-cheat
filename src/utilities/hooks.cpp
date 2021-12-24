@@ -100,17 +100,60 @@ namespace funcs
             cc::cheat::write_bytes(funcs::mana::addr + funcs::mana::offset, funcs::mana::backup);
         }
     }
+    
+    namespace effects
+    {
+        uintptr_t addr;
+        std::vector<uint8_t> backup;
+        uint32_t jmp_back;
+        uint32_t temp;
+
+        _declspec(naked) void hook()
+        {
+            _asm
+            {
+                mov temp, eax
+                mov eax, variables::pets
+                mov [esi+0x298], eax
+                mov eax, temp
+                jmp [jmp_back]
+            }
+        }
+
+        void init()
+        {
+            SYSTEM_INFO si;
+            GetSystemInfo(&si);
+            addr = cc::cheat::find_signature(sig, mask, reinterpret_cast<uintptr_t>(si.lpMinimumApplicationAddress), reinterpret_cast<uintptr_t>(si.lpMaximumApplicationAddress) - reinterpret_cast<uintptr_t>(si.lpMinimumApplicationAddress), 0xff);
+            if (addr == 0)
+                throw std::runtime_error("Unable to find funcs::effects::addr");
+            console::log() << "funcs::effects::addr found! - " << std::hex << addr << std::endl;
+
+            backup = cc::cheat::read_bytes(addr + offset, 10);
+            jmp_back = addr + offset + 10;
+            std::vector<uint8_t> bytes = { 0xE9, 0x00, 0x00, 0x00, 0x00, 0x90, 0x90, 0x90, 0x90, 0x90 };
+            cc::cheat::write(reinterpret_cast<uintptr_t>(bytes.data() + 1), reinterpret_cast<uint32_t>(hook) - (addr + offset) - 5);
+            cc::cheat::write_bytes(addr + offset, bytes);
+        }
+
+        void release()
+        {
+            cc::cheat::write_bytes(addr + offset, backup);
+        }
+    }
 }
 
 void hooks::initialize()
 {
-    //funcs::dmg::init();
-    //funcs::mana::init();
+    funcs::dmg::init();
+    funcs::mana::init();
+    funcs::effects::init();
     console::log() << "Hooks initialized!" << std::endl;
 }
 
 void hooks::release()
 {
-    //funcs::dmg::release();
-    //funcs::mana::release();
+    funcs::dmg::release();
+    funcs::mana::release();
+    funcs::effects::release();
 }

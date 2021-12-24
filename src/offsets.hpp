@@ -19,9 +19,10 @@ namespace funcs
     //Terraria.Player::ResetEffects
     namespace effects
     {
-        constexpr char* sig = "\xaa\x74\x13\xa8\xa9\xac\x74\x0e"; // \x55\x8b\xec\x57\x56\x53\x8b\xf1
-        constexpr char* mask = "xxxxxxxx";
+        constexpr char* sig = "\xaa\x74\x13\xa8\xa9\xac\x74\x0e\x7f\x41\xff\xff\xff\xff\xff"; // \x55\x8b\xec\x57\x56\x53\x8b\xf1\x80\xbe\x00\x00\x00\x00\x00
+        constexpr char* mask = "xxxxxxxxxx????x";
+        constexpr uint32_t offset = 0x30A;
     }
 }
 
-//mov [esi+00000298],00000001
+//mov [esi+0x298], 0x1
